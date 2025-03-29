@@ -631,7 +631,7 @@
                 <div class="tooltip">Base64 Decode</div>
             </button>
             <div class="switch-container">
-                <div class="switch-label">AES:</div>
+                <div class="switch-label" id="encryption-mode-label">Base64:</div>
                 <label class="switch">
                     <input type="checkbox" id="aes-toggle">
                     <span class="slider"></span>
@@ -744,6 +744,11 @@
             function toggleAES() {
                 useAES = aesToggle.checked;
                 passwordContainer.style.display = useAES ? 'flex' : 'none';
+                
+                // Update the label text based on the toggle state
+                const encryptionModeLabel = document.getElementById('encryption-mode-label');
+                encryptionModeLabel.textContent = useAES ? 'AES:' : 'Base64:';
+                
                 processInput();
             }
 
@@ -778,10 +783,11 @@
                             const encrypted = encryptAES(input, password, salt);
                             
                             // Store whether a salt was used during encryption
+                            // BUT NOT the salt itself - user must remember their salt
                             let encryptedData = {
                                 ciphertext: encrypted,
                                 algorithm: 'AES-256',
-                                usedSalt: !!salt
+                                usedSalt: !!salt  // Boolean flag only - no actual salt stored
                             };
                             
                             const base64Result = encodeBase64(JSON.stringify(encryptedData));
@@ -809,7 +815,9 @@
                                     return;
                                 }
                                 
-                                result = decryptAES(parsedData.ciphertext, password, salt);
+                                // Use the salt from the input field or empty string if none
+                                const decryptSalt = salt || '';
+                                result = decryptAES(parsedData.ciphertext, password, decryptSalt);
                             } else {
                                 result = decodeBase64(input);
                             }
@@ -838,8 +846,8 @@
             }
 
             function encryptAES(text, password, salt) {
-                // Use provided salt or generate a random one if not provided
-                const useSalt = salt || CryptoJS.lib.WordArray.random(16).toString();
+                // Use provided salt or empty string if not provided
+                const useSalt = salt || '';
                 
                 // Generate key from password and salt
                 const key = CryptoJS.PBKDF2(password, useSalt, {
