@@ -600,7 +600,7 @@
 
                     <div class="code-block">
                         <span class="comment">// Example of AES-256 encryption</span><br>
-                        "Hello World" + Password + Salt → "U2FsdGVkX1+7NFL1w9TIHptP9wOCvYLK7Fg="
+                        "Hello World" +  + Salt → "U2FsdGVkX1+7NFL1w9TIHptP9wOCvYLK7Fg="
                     </div>
 
                     <p>The "256" in AES-256 refers to the key length in bits. Larger keys provide exponentially more security:</p>
@@ -633,7 +633,7 @@
                     </div>
                 </div>
                 <div class="section-content">
-                    <p>A <span class="highlight">salt</span> is a random piece of data used as an additional input to a one-way function that hashes data, passwords, or passphrases. In our AES implementation, the salt plays a crucial role in strengthening security.</p>
+                    <p>A <span class="highlight">salt</span> is a random piece of data used as an additional input to a one-way function that hashes data, s, or passphrases. In our AES implementation, the salt plays a crucial role in strengthening security.</p>
                     
                     <p>How salts enhance security:</p>
                     <ul style="margin-left: 20px; margin-bottom: 16px;">
@@ -780,7 +780,7 @@
                         <li>This provides both security and transferability</li>
                     </ul>
                     
-                    <p>Remember: Base64 alone provides <span class="highlight">zero security</span> - it's just a way to represent data. AES-256 provides true cryptographic protection that cannot be reversed without the correct password.</p>
+                    <p>Remember: Base64 alone provides <span class="highlight">zero security</span> - it's just a way to represent data. AES-256 provides true cryptographic protection that cannot be reversed without the correct password and/or Salt (recommended).</p>
                 </div>
             </div>
 
