@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About :: Hash | Base64 & AES-256 Encoder/Decoder</title>
+    <!-- Meta Description -->
+    <meta name="description" content="Encode and decode text using Base64 and AES-256 encryption. A powerful tool for secure text encoding and decoding with password protection.">
+    <!-- Favicon Links -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/webmanifest.json">
+    <link rel="shortcut icon" href="favicon/favicon.ico">
+    <!-- Open Graph Meta Tags (for social sharing) -->
+    <meta property="og:title" content="About :: Hash | Base64 & AES-256 Encoder/Decoder">
+    <meta property="og:description" content="About Base64 and AES-256 encryption. A powerful tool for secure text encoding and decoding with password protection.">
+    <meta property="og:image" content="https://i.ibb.co/B2009tQh/hash123.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://drbaph.is-a.dev/Hash/">
+    <!-- Twitter Card (for better previews on Twitter) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About :: Hash | Base64 & AES-256 Encoder/Decoder">
+    <meta name="twitter:description" content="About Base64 and AES-256 encryption. A powerful tool for secure text encoding and decoding with password protection.">
+    <meta name="twitter:image" content="https://i.ibb.co/B2009tQh/hash123.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background-color: #121212;
+            --background-secondary: #1e1e1e;
+            --text-primary: #f0f0f0;
+            --accent-color: #00FF41;
+            --accent-glow: rgba(0, 255, 65, 0.4);
+            --transition-speed: 300ms;
+            --terminal-padding: 16px;
+            --border-radius: 8px;
+        }
+
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/jetbrains-mono/1.0.6/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-link:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background-color: rgba(0, 255, 65, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            background-color: var(--background-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: transform var(--transition-speed);
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            padding: 16px var(--terminal-padding);
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-icon {
+            font-size: 1.4rem;
+            margin-right: 12px;
+            color: var(--accent-color);
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .section-content {
+            padding: 20px var(--terminal-padding);
+        }
+
+        p {
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .mono {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-in-out 0.3s forwards;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table th {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--accent-color);
+        }
+
+        .comparison-table tr:hover {
+            background-color: rgba(0, 255, 65, 0.05);
+        }
+
+        .security-meter {
+            margin: 20px 0;
+            height: 30px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .security-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff4500 0%, #ffff00 50%, var(--accent-color) 100%);
+            border-radius: 15px;
+            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .security-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .code-block {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin: 16px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+
+        .animate-typing {
+            border-right: 0.15em solid var(--accent-color);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent-color) }
+        }
+
+        /* Noise animation for background */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: -1;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gcHFDELpZ6A4QAAAn9JREFUaN7tmsuK1EAYhb+aTozirBxBQXRWMogLQRB05cJH8Q3El/AlXIgLQURduBNEGR0UZzQzTnfn7yK1mE6laZJOprpnmAOFdCfVnar/nPOfulWV5dTpSxDdh0B74CfwuohzVRXOHHK+ADaBTeDMjP9OgPfAW+AV8Bz4A2wVYdZVCLkGPJrDiHPgLfB4ZlQnwEnghwqNbqDnkLsWeBrBiIvAE+AucGUQqzVgBJypQEiW+H0CvAZuLSDiaGiVDiGPIxkB8DUDRyj2n3kLugfcFv3/CvgArOlLdrFDzSskKgFywD3JmAvAPdGHU+C6Gc1lCnkjjDgdjAxCH0QbOXC1DYKRwbS7CnWWAasjkvJ8AZNlimvygbQDjXcWWvMTpqawhTmWc8jYyTEsYTbCvnuVm5BTFzYxUkbyVjmrSElsYnrznfQQDaS2Ja9yXVnUwVMlOZH0fgTrLTfYnedBXE9E3UyItq7BrKUcSe1E2beuMqtQxGLzKIaYvVD7toTPLSWZEBFtdFVuJ1rXwUVK+1aSE6kLa3Md3bqODG1VRuw2JNM6KzNhLUdCa1mKaFOW64TuV1uDnfB9q8V9Kjuq7JCMT77/JXJwElMf60oJY4oZO23Nj/IiDmuv+gIh0xTXXA0+ey52N0yxVh+wbJC2CQypCrlR1UJKy5E14Jvo4z7wvOa9vhgIcxu4IQJVAjeB76pCKRUj9oGzQCN7OsrbI97XFnAG7JcaCVJdTLxnB9XLUdCCuYNgXLc4XwHnRYdZGKDPX4dGxMfcqphkWU/UXrcyC2Wd0K1MmJhrK/MBGk621i9I/I+1lZn+ASIdLtQ8FS04AAAAAElFTkSuQmCC');
+            animation: noise 0.5s steps(10) infinite;
+        }
+
+        @keyframes noise {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -5%); }
+            20% { transform: translate(-10%, 5%); }
+            30% { transform: translate(5%, -10%); }
+            40% { transform: translate(-5%, 15%); }
+            50% { transform: translate(-10%, 5%); }
+            60% { transform: translate(15%, 0%); }
+            70% { transform: translate(0%, 10%); }
+            80% { transform: translate(-15%, 0%); }
+            90% { transform: translate(10%, 5%); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 15px;
+            }
+
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .header-title p {
+                font-size: 0.8rem;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .nav-link i {
+                margin-right: 0;
+            }
+
+            .section-header {
+                padding: 12px;
+            }
+
+            .section-content {
+                padding: 15px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .nav-links {
+                align-self: flex-end;
+            }
+
+            .section-icon {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+
+            .comparison-table {
+                font-size: 0.8em;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-title">
+                <h1>drbaph.is-a.dev/Hash</h1>
+                <p>About Base64 & AES-256 Encryption</p>
+            </div>
+            <div class="nav-links">
+                <a href="https://drbaph.is-a.dev/Hash/" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Hash</span>
+                </a>
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+                <a href="https://github.com/Saganaki22/Hash" class="nav-link" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="section-title">What Is Base64?</div>
+                </div>
+                <div class="section-content">
+                    <p class="animate-typing">Base64 is an <span class="highlight">encoding scheme</span>, not encryption.</p>
+                    
+                    <p>Base64 encoding converts binary data into a set of 64 ASCII characters (A-Z, a-z, 0-9, +, /). It's designed to represent binary data in environments that only support text, ensuring data integrity during transfer.</p>
+                    
+                    <p>Key characteristics of Base64:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 16px;">
+                        <li>Increases size by approximately 33% (3 bytes become 4 characters)</li>
+                        <li>Fully reversible with no data loss</li>
+                        <li>Provides <span class="highlight">no security</span> - anyone can decode it</li>
+                        <li>Commonly used for data transfer, not data protection</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <span class="comment">// Example of Base64 encoding</span><br>
+                        "Hello World" → "SGVsbG8gV29ybGQ="
+                    </div>
+
+                    <p>Base64 is used extensively in:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Email attachments (MIME)</li>
+                        <li>Data URLs in web pages</li>
+                        <li>Storing binary data in JSON</li>
+                        <li>Embedding images in CSS/HTML</li>
+                        <li>API authentication (Basic Auth)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="section-title">What Is AES-256 Encryption?</div>
+                </div>
+                <div class="section-content">
+                    <p>AES (Advanced Encryption Standard) is a <span class="highlight">symmetric encryption algorithm</span> adopted by the U.S. government and widely used worldwide. AES-256 refers to the 256-bit key size variant, offering the highest security level in the AES family.</p>
+                    
+                    <p>AES-256 encryption:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 16px;">
+                        <li>Transforms plaintext into seemingly random ciphertext</li>
+                        <li>Uses the same key for both encryption and decryption</li>
+                        <li>Operates on fixed-size blocks of data (128 bits)</li>
+                        <li>Applies multiple rounds of complex transformations</li>
+                        <li>Provides true cryptographic security backed by mathematics</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <span class="comment">// Example of AES-256 encryption</span><br>
+                        "Hello World" + Password + Salt → "U2FsdGVkX1+7NFL1w9TIHptP9wOCvYLK7Fg="
+                    </div>
+
+                    <p>The "256" in AES-256 refers to the key length in bits. Larger keys provide exponentially more security:</p>
+                    
+                    <div class="security-meter">
+                        <div class="security-bar" id="aes-security-bar"></div>
+                        <div class="security-label">AES-256: Extremely Secure</div>
+                    </div>
+
+                    <p>AES-256 is used in:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Government and military systems</li>
+                        <li>Financial institutions</li>
+                        <li>VPN services</li>
+                        <li>Secure file storage</li>
+                        <li>Healthcare data protection</li>
+                        <li>Secure messaging apps</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="section-title">The Role of Salt in Encryption</div>
+                </div>
+                <div class="section-content">
+                    <p>A <span class="highlight">salt</span> is a random piece of data used as an additional input to a one-way function that hashes data, passwords, or passphrases. In our AES implementation, the salt plays a crucial role in strengthening security.</p>
+                    
+                    <p>How salts enhance security:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 16px;">
+                        <li>Prevents identical passwords from producing identical encryption keys</li>
+                        <li>Defends against rainbow table attacks (pre-computed hash tables)</li>
+                        <li>Ensures uniqueness even when the same password is used multiple times</li>
+                        <li>Adds complexity without requiring users to remember additional information</li>
+                    </ul>
+                    
+                    <div class="code-block">
+                        <span class="comment">// How salt affects key derivation</span><br>
+                        Password: "secret123" + Salt: "abc" → Key: f59c82c72c5969a8...<br>
+                        Password: "secret123" + Salt: "xyz" → Key: 7d9fe825f1e54936... <span class="comment">// Completely different!</span>
+                    </div>
+                    
+                    <p>In our implementation:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>You can generate a random salt with each encryption</li>
+                        <li>You can provide a custom salt for consistent encryption results</li>
+                        <li>The salt is stored alongside the encrypted data (this doesn't reduce security)</li>
+                        <li>Both the correct password AND salt are required for decryption</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="section-title">Password-Based Encryption Security</div>
+                </div>
+                <div class="section-content">
+                    <p>When you enable AES encryption in CryptoTerm, your password becomes the foundation of security. Here's what happens:</p>
+                    
+                    <ol style="margin-left: 20px; margin-bottom: 16px;">
+                        <li>Your password and salt are processed through PBKDF2 (Password-Based Key Derivation Function)</li>
+                        <li>PBKDF2 runs 1000 iterations, making brute-force attacks computationally expensive</li>
+                        <li>This produces a cryptographically strong 256-bit key</li>
+                        <li>The key is used with AES to encrypt your data</li>
+                        <li>The result is true, military-grade encryption</li>
+                    </ol>
+                    
+                    <p>The strength of your encryption depends greatly on your password quality:</p>
+                    
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Password Type</th>
+                            <th>Example</th>
+                            <th>Security Level</th>
+                        </tr>
+                        <tr>
+                            <td>Simple word</td>
+                            <td>"password"</td>
+                            <td>Very Low</td>
+                        </tr>
+                        <tr>
+                            <td>Word with substitutions</td>
+                            <td>"p@ssw0rd"</td>
+                            <td>Low</td>
+                        </tr>
+                        <tr>
+                            <td>Random short</td>
+                            <td>"x7!B3"</td>
+                            <td>Medium</td>
+                        </tr>
+                        <tr>
+                            <td>Long passphrase</td>
+                            <td>"correct horse battery staple"</td>
+                            <td>High</td>
+                        </tr>
+                        <tr>
+                            <td>Long random</td>
+                            <td>"uXP5%r2HZk&amp;L9@nF!qT"</td>
+                            <td>Very High</td>
+                        </tr>
+                    </table>
+                    
+                    <p>With a strong password and AES-256, your data is protected by mathematics that would require billions of years to break using current technology. Even quantum computers, when they become practical, would only reduce AES-256 security to roughly that of AES-128 today, which remains secure against classical attacks.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="section-title">Base64 vs. AES: Key Differences</div>
+                </div>
+                <div class="section-content">
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Feature</th>
+                            <th>Base64</th>
+                            <th>AES-256</th>
+                        </tr>
+                        <tr>
+                            <td>Primary Purpose</td>
+                            <td>Data representation</td>
+                            <td>Data protection</td>
+                        </tr>
+                        <tr>
+                            <td>Security Level</td>
+                            <td>None (easily reversed)</td>
+                            <td>Extremely high</td>
+                        </tr>
+                        <tr>
+                            <td>Key Required</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Output Predictability</td>
+                            <td>Same input = Same output</td>
+                            <td>Same input + Different salt = Different output</td>
+                        </tr>
+                        <tr>
+                            <td>Mathematical Basis</td>
+                            <td>Simple mapping</td>
+                            <td>Complex cryptographic algorithms</td>
+                        </tr>
+                        <tr>
+                            <td>Processing Complexity</td>
+                            <td>Very low</td>
+                            <td>High (intentionally)</td>
+                        </tr>
+                        <tr>
+                            <td>Use Cases</td>
+                            <td>Data transfer, embedding</td>
+                            <td>Sensitive data protection</td>
+                        </tr>
+                    </table>
+                    
+                    <p>In CryptoTerm, we combine both technologies:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>First, your data is encrypted with AES-256 (if enabled)</li>
+                        <li>Then, the result is encoded with Base64 for easy sharing</li>
+                        <li>This provides both security and transferability</li>
+                    </ul>
+                    
+                    <p>Remember: Base64 alone provides <span class="highlight">zero security</span> - it's just a way to represent data. AES-256 provides true cryptographic protection that cannot be reversed without the correct password.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <div class="section-title">Practical Security Considerations</div>
+                </div>
+                <div class="section-content">
+                    <p>When using CryptoTerm, consider these practical security aspects:</p>
+                    
+                    <p><span class="highlight">Password Transmission:</span> This tool operates entirely in your browser. Your password and data never leave your device, minimizing exposure risks.</p>
+                    
+                    <p><span class="highlight">Breaking AES-256:</span> The security of AES-256 is well-established:</p>
+                    <ul style="margin-left: 20px; margin-bottom: 16px;">
+                        <li>Brute-forcing a 256-bit key would require more energy than exists in the universe</li>
+                        <li>All known attacks remain theoretical or require impractical conditions</li>
+                        <li>Intelligence agencies worldwide rely on AES-256 for top-secret information</li>
+                    </ul>
+                    
+                    <p>To put this in perspective, breaking AES-256 with current technology would take:</p>
+                    
+                    <div class="security-meter">
+                        <div class="security-bar" id="breaking-time-bar"></div>
+                        <div class="security-label">Billions of years with all computers on Earth</div>
+                    </div>
+                    
+                    <p><span class="highlight">Real-world vulnerabilities</span> typically come from:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Weak passwords (the most common vulnerability)</li>
+                        <li>Password sharing or storage in insecure locations</li>
+                        <li>Malware or keyloggers on your device</li>
+                        <li>Implementation flaws in encryption software</li>
+                        <li>Side-channel attacks (physical access to hardware)</li>
+                    </ul>
+                    
+                    <p>For maximum security when using CryptoTerm:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Use strong, unique passwords</li>
+                        <li>Generate a new random salt for each encryption</li>
+                        <li>Share passwords via different channels than encrypted data</li>
+                        <li>Clear both input and output fields when finished</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate security bars after page load
+            setTimeout(function() {
+                document.getElementById('aes-security-bar').style.width = '95%';
+                document.getElementById('breaking-time-bar').style.width = '99%';
+            }, 500);
+            
+            // Add scroll reveal effect to sections
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
