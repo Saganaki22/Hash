@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash | Base64 & AES-256 Encoder/Decoder</title>
+    <!-- Meta Description -->
+    <meta name="description" content="Encode and decode text using Base64 and AES-256 encryption. A powerful tool for secure text encoding and decoding with password protection.">
+    <!-- Favicon Links -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/webmanifest.json">
+    <link rel="shortcut icon" href="favicon/favicon.ico">
+    <!-- Open Graph Meta Tags (for social sharing) -->
+    <meta property="og:title" content="Hash | Base64 & AES-256 Encoder/Decoder">
+    <meta property="og:description" content="Encode and decode text using Base64 and AES-256 encryption. A powerful tool for secure text encoding and decoding with password protection.">
+    <meta property="og:image" content="https://i.ibb.co/B2009tQh/hash123.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://drbaph.is-a.dev/Hash/">
+    <!-- Twitter Card (for better previews on Twitter) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hash | Base64 & AES-256 Encoder/Decoder">
+    <meta name="twitter:description" content="Encode and decode text using Base64 and AES-256 encryption. A powerful tool for secure text encoding and decoding with password protection.">
+    <meta name="twitter:image" content="https://i.ibb.co/B2009tQh/hash123.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --background-color: #121212;
+            --background-secondary: #1e1e1e;
+            --text-primary: #f0f0f0;
+            --accent-color: #00FF41;
+            --accent-glow: rgba(0, 255, 65, 0.4);
+            --transition-speed: 300ms;
+            --terminal-padding: 16px;
+            --border-radius: 8px;
+        }
+
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/jetbrains-mono/1.0.6/web/woff2/JetBrainsMono-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-link:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background-color: rgba(0, 255, 65, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--background-secondary);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px var(--terminal-padding);
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            color: var(--accent-color);
+        }
+
+        .panel-content {
+            flex: 1;
+            position: relative;
+            padding: var(--terminal-padding);
+        }
+
+        .terminal-textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            resize: none;
+            background-color: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            outline: none;
+            padding: 0;
+        }
+
+        .terminal-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background-color: var(--accent-color);
+            animation: blink 1s infinite;
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            display: none;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .counter {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .control-panel {
+            padding: 20px;
+            background-color: var(--background-secondary);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            min-width: 44px;
+            position: relative;
+        }
+
+        .btn:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn.active {
+            background-color: rgba(0, 255, 65, 0.15);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            margin: 0 16px;
+        }
+
+        .switch-label {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition-speed);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 3px;
+            background-color: var(--text-primary);
+            transition: var(--transition-speed);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: rgba(0, 255, 65, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-color: var(--accent-color);
+        }
+
+        .tooltip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-speed);
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+        }
+
+        .btn:hover .tooltip {
+            opacity: 1;
+        }
+
+        .password-container {
+            display: none;
+            margin-top: 16px;
+            width: 100%;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .password-input-group {
+            display: flex;
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .password-input {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 10px 16px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            padding-right: 80px; /* Space for the buttons */
+        }
+        
+        .input-action-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 40px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: color var(--transition-speed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .input-action-btn:hover {
+            color: var(--accent-color);
+        }
+        
+        .input-action-btn.eye-btn {
+            right: 40px;
+        }
+        
+        .input-action-btn.copy-btn {
+            right: 0;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: var(--accent-color);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transform: translateX(120%);
+            transition: transform var(--transition-speed) ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification i {
+            margin-right: 10px;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: var(--border-radius);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        /* Noise animation */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: -1;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gcHFDELpZ6A4QAAAn9JREFUaN7tmsuK1EAYhb+aTozirBxBQXRWMogLQRB05cJH8Q3El/AlXIgLQURduBNEGR0UZzQzTnfn7yK1mE6laZJOprpnmAOFdCfVnar/nPOfulWV5dTpSxDdh0B74CfwuohzVRXOHHK+ADaBTeDMjP9OgPfAW+AV8Bz4A2wVYdZVCLkGPJrDiHPgLfB4ZlQnwEnghwqNbqDnkLsWeBrBiIvAE+AucGUQqzVgBJypQEiW+H0CvAZuLSDiaGiVDiGPIxkB8DUDRyj2n3kLugfcFv3/CvgArOlLdrFDzSskKgFywD3JmAvAPdGHU+C6Gc1lCnkjjDgdjAxCH0QbOXC1DYKRwbS7CnWWAasjkvJ8AZNlimvygbQDjXcWWvMTpqawhTmWc8jYyTEsYTbCvnuVm5BTFzYxUkbyVjmrSElsYnrznfQQDaS2Ja9yXVnUwVMlOZH0fgTrLTfYnedBXE9E3UyItq7BrKUcSe1E2beuMqtQxGLzKIaYvVD7toTPLSWZEBFtdFVuJ1rXwUVK+1aSE6kLa3Md3bqODG1VRuw2JNM6KzNhLUdCa1mKaFOW64TuV1uDnfB9q8V9Kjuq7JCMT77/JXJwElMf60oJY4oZO23Nj/IiDmuv+gIh0xTXXA0+ey52N0yxVh+wbJC2CQypCrlR1UJKy5E14Jvo4z7wvOa9vhgIcxu4IQJVAjeB76pCKRUj9oGzQCN7OsrbI97XFnAG7JcaCVJdTLxnB9XLUdCCuYNgXLc4XwHnRYdZGKDPX4dGxMfcqphkWU/UXrcyC2Wd0K1MmJhrK/MBGk621i9I/I+1lZn+ASIdLtQ8FS04AAAAAElFTkSuQmCC');
+            animation: noise 0.5s steps(10) infinite;
+        }
+
+        @keyframes noise {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -5%); }
+            20% { transform: translate(-10%, 5%); }
+            30% { transform: translate(5%, -10%); }
+            40% { transform: translate(-5%, 15%); }
+            50% { transform: translate(-10%, 5%); }
+            60% { transform: translate(15%, 0%); }
+            70% { transform: translate(0%, 10%); }
+            80% { transform: translate(-15%, 0%); }
+            90% { transform: translate(10%, 5%); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .header-title p {
+                font-size: 0.8rem;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .nav-link i {
+                margin-right: 0;
+            }
+
+            .control-panel {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .btn span {
+                display: none;
+            }
+
+            .btn i {
+                margin-right: 0;
+            }
+
+            .switch-container {
+                margin: 0 8px;
+            }
+
+            .switch-label {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-title">
+                <h1>drbaph.is-a.dev/Hash</h1>
+                <p>Base64 & AES-256 Encoder/Decoder</p>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    <span>Hash</span>
+                </a>
+                <a href="hash-about.html" class="nav-link">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+                <a href="https://github.com/Saganaki22/Hash" class="nav-link" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Input</div>
+                </div>
+                <div class="panel-content">
+                    <textarea id="input-text" class="terminal-textarea" placeholder="Enter text to encode/decode..."></textarea>
+                    <div class="terminal-cursor"></div>
+                    <div class="counter" id="input-counter">0 characters | 0 bytes</div>
+                    <div class="loading" id="input-loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Output</div>
+                </div>
+                <div class="panel-content">
+                    <textarea id="output-text" class="terminal-textarea" placeholder="Result will appear here..." readonly></textarea>
+                    <div class="counter" id="output-counter">0 characters | 0 bytes</div>
+                    <div class="loading" id="output-loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <button id="encode-btn" class="btn active">
+                <i class="fas fa-lock"></i>
+                <span>Encode</span>
+                <div class="tooltip">Base64 Encode</div>
+            </button>
+            <button id="decode-btn" class="btn">
+                <i class="fas fa-unlock"></i>
+                <span>Decode</span>
+                <div class="tooltip">Base64 Decode</div>
+            </button>
+            <div class="switch-container">
+                <div class="switch-label">AES:</div>
+                <label class="switch">
+                    <input type="checkbox" id="aes-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button id="copy-btn" class="btn">
+                <i class="fas fa-copy"></i>
+                <span>Copy</span>
+                <div class="tooltip">Copy to Clipboard</div>
+            </button>
+            <button id="clear-btn" class="btn">
+                <i class="fas fa-trash-alt"></i>
+                <span>Clear</span>
+                <div class="tooltip">Clear Both Fields</div>
+            </button>
+        </div>
+
+        <div class="password-container" id="password-container">
+            <div class="password-input-group">
+                <input type="password" id="password-input" class="password-input" placeholder="Enter password for encryption/decryption">
+                <button type="button" class="input-action-btn eye-btn" id="password-visibility-btn">
+                    <i class="fas fa-eye-slash"></i>
+                </button>
+                <button type="button" class="input-action-btn copy-btn" id="password-copy-btn">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            <div class="password-input-group">
+                <input type="text" id="salt-input" class="password-input" placeholder="Custom salt (optional)">
+                <button type="button" class="input-action-btn copy-btn" id="salt-copy-btn">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            <button id="generate-salt-btn" class="btn">
+                <i class="fas fa-random"></i>
+                <span>Generate Salt</span>
+            </button>
+        </div>
+
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i>
+            <span id="notification-text">Copied to clipboard!</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const inputText = document.getElementById('input-text');
+            const outputText = document.getElementById('output-text');
+            const encodeBtn = document.getElementById('encode-btn');
+            const decodeBtn = document.getElementById('decode-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const aesToggle = document.getElementById('aes-toggle');
+            const passwordContainer = document.getElementById('password-container');
+            const passwordInput = document.getElementById('password-input');
+            const saltInput = document.getElementById('salt-input');
+            const generateSaltBtn = document.getElementById('generate-salt-btn');
+            const inputCounter = document.getElementById('input-counter');
+            const outputCounter = document.getElementById('output-counter');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            const inputLoading = document.getElementById('input-loading');
+            const outputLoading = document.getElementById('output-loading');
+
+            // State
+            let mode = 'encode'; // encode or decode
+            let useAES = false;
+
+            // Event Listeners
+            inputText.addEventListener('input', debounce(processInput, 300));
+            encodeBtn.addEventListener('click', () => setMode('encode'));
+            decodeBtn.addEventListener('click', () => setMode('decode'));
+            copyBtn.addEventListener('click', copyToClipboard);
+            clearBtn.addEventListener('click', clearFields);
+            aesToggle.addEventListener('change', toggleAES);
+            generateSaltBtn.addEventListener('click', generateRandomSalt);
+            passwordInput.addEventListener('input', debounce(processInput, 300));
+            saltInput.addEventListener('input', debounce(processInput, 300));
+            
+            // New button event listeners
+            const passwordVisibilityBtn = document.getElementById('password-visibility-btn');
+            const passwordCopyBtn = document.getElementById('password-copy-btn');
+            const saltCopyBtn = document.getElementById('salt-copy-btn');
+            
+            passwordVisibilityBtn.addEventListener('click', togglePasswordVisibility);
+            passwordCopyBtn.addEventListener('click', () => copyInputValue(passwordInput, 'Password'));
+            saltCopyBtn.addEventListener('click', () => copyInputValue(saltInput, 'Salt'));
+
+            // Initialize UI
+            updateCharCounter(inputText, inputCounter);
+            updateCharCounter(outputText, outputCounter);
+
+            // Functions
+            function setMode(newMode) {
+                mode = newMode;
+                
+                if (mode === 'encode') {
+                    encodeBtn.classList.add('active');
+                    decodeBtn.classList.remove('active');
+                } else {
+                    encodeBtn.classList.remove('active');
+                    decodeBtn.classList.add('active');
+                }
+                
+                processInput();
+            }
+
+            function toggleAES() {
+                useAES = aesToggle.checked;
+                passwordContainer.style.display = useAES ? 'flex' : 'none';
+                processInput();
+            }
+
+            async function processInput() {
+                const input = inputText.value.trim();
+                
+                if (!input) {
+                    outputText.value = '';
+                    updateCharCounter(outputText, outputCounter);
+                    return;
+                }
+                
+                try {
+                    outputLoading.style.display = 'flex';
+                    
+                    // Add small delay for loading effect
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    
+                    let result;
+                    
+                    if (mode === 'encode') {
+                        if (useAES) {
+                            const password = passwordInput.value;
+                            const salt = saltInput.value;
+                            
+                            if (!password) {
+                                outputText.value = 'Please enter a password for encryption.';
+                                return;
+                            }
+                            
+                            const encryptedData = encryptAES(input, password, salt);
+                            const base64Result = encodeBase64(JSON.stringify(encryptedData));
+                            result = base64Result;
+                        } else {
+                            result = encodeBase64(input);
+                        }
+                    } else { // decode
+                        try {
+                            if (useAES) {
+                                const password = passwordInput.value;
+                                
+                                if (!password) {
+                                    outputText.value = 'Please enter a password for decryption.';
+                                    return;
+                                }
+                                
+                                const decodedBase64 = decodeBase64(input);
+                                const parsedData = JSON.parse(decodedBase64);
+                                result = decryptAES(parsedData, password);
+                            } else {
+                                result = decodeBase64(input);
+                            }
+                        } catch (error) {
+                            result = `Error: ${error.message || 'Invalid input for decoding'}`;
+                        }
+                    }
+                    
+                    outputText.value = result;
+                    updateCharCounter(outputText, outputCounter);
+                } catch (error) {
+                    outputText.value = `Error: ${error.message || 'An error occurred during processing'}`;
+                } finally {
+                    outputLoading.style.display = 'none';
+                }
+            }
+
+            function encodeBase64(str) {
+                // UTF-8 encoding support
+                return btoa(unescape(encodeURIComponent(str)));
+            }
+
+            function decodeBase64(str) {
+                // UTF-8 decoding support
+                return decodeURIComponent(escape(atob(str)));
+            }
+
+            function encryptAES(text, password, salt) {
+                // If no salt provided, generate a random one
+                const useSalt = salt || generateRandomSalt();
+                
+                // Generate key from password and salt
+                const key = CryptoJS.PBKDF2(password, useSalt, {
+                    keySize: 256 / 32,
+                    iterations: 1000
+                });
+                
+                // Encrypt
+                const encrypted = CryptoJS.AES.encrypt(text, key.toString()).toString();
+                
+                return {
+                    ciphertext: encrypted,
+                    salt: useSalt,
+                    algorithm: 'AES-256'
+                };
+            }
+
+            function decryptAES(data, password) {
+                const { ciphertext, salt } = data;
+                
+                // Generate key from password and salt
+                const key = CryptoJS.PBKDF2(password, salt, {
+                    keySize: 256 / 32,
+                    iterations: 1000
+                });
+                
+                // Decrypt
+                const bytes = CryptoJS.AES.decrypt(ciphertext, key.toString());
+                
+                return bytes.toString(CryptoJS.enc.Utf8);
+            }
+
+            function generateRandomSalt() {
+                const salt = CryptoJS.lib.WordArray.random(16).toString();
+                saltInput.value = salt;
+                processInput();
+                return salt;
+            }
+
+            function copyToClipboard() {
+                if (!outputText.value) {
+                    showNotification('Nothing to copy!', 'warning');
+                    return;
+                }
+                
+                outputText.select();
+                document.execCommand('copy');
+                
+                // Deselect text
+                window.getSelection().removeAllRanges();
+                
+                showNotification('Copied to clipboard!', 'success');
+            }
+            
+            function copyInputValue(inputElement, fieldName) {
+                if (!inputElement.value) {
+                    showNotification(`${fieldName} is empty!`, 'warning');
+                    return;
+                }
+                
+                // Special handling for password field
+                const isPasswordField = inputElement.type === 'password';
+                const originalType = inputElement.type;
+                
+                // Temporarily convert password to text if needed
+                if (isPasswordField) {
+                    inputElement.type = 'text';
+                }
+                
+                // Select and copy
+                inputElement.select();
+                document.execCommand('copy');
+                
+                // Restore original type
+                if (isPasswordField) {
+                    inputElement.type = originalType;
+                }
+                
+                // Deselect text
+                window.getSelection().removeAllRanges();
+                
+                showNotification(`${fieldName} copied to clipboard!`, 'success');
+            }
+            
+            function togglePasswordVisibility() {
+                const passwordField = document.getElementById('password-input');
+                const icon = passwordVisibilityBtn.querySelector('i');
+                
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    passwordField.type = 'password';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            }
+
+            function clearFields() {
+                inputText.value = '';
+                outputText.value = '';
+                updateCharCounter(inputText, inputCounter);
+                updateCharCounter(outputText, outputCounter);
+            }
+
+            function updateCharCounter(textarea, counter) {
+                const text = textarea.value;
+                const charCount = text.length;
+                const byteCount = new Blob([text]).size;
+                
+                counter.textContent = `${charCount} characters | ${byteCount} bytes`;
+            }
+
+            function showNotification(message, type = 'success') {
+                notificationText.textContent = message;
+                
+                if (type === 'warning') {
+                    notification.style.color = '#FFD700';
+                } else {
+                    notification.style.color = 'var(--accent-color)';
+                }
+                
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2000);
+            }
+
+            // Debounce function to limit how often a function is called
+            function debounce(func, wait) {
+                let timeout;
+                return function() {
+                    const context = this;
+                    const args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        func.apply(context, args);
+                    }, wait);
+                };
+            }
+
+            // Add typing animation to input field placeholder
+            const inputPlaceholder = "Enter text to encode/decode...";
+            let placeholderIndex = 0;
+            
+            function animatePlaceholder() {
+                if (inputText.value || document.activeElement === inputText) {
+                    return;
+                }
+                
+                if (placeholderIndex <= inputPlaceholder.length) {
+                    inputText.setAttribute('placeholder', inputPlaceholder.substring(0, placeholderIndex) + '▌');
+                    placeholderIndex++;
+                    setTimeout(animatePlaceholder, 100);
+                } else {
+                    placeholderIndex = 0;
+                    setTimeout(animatePlaceholder, 2000);
+                }
+            }
+            
+            animatePlaceholder();
+        });
+    </script>
+</body>
+</html>
