@@ -1,6 +1,6 @@
 # Hash
 
-A modern, sleek, self-contained Base64 & AES-256 encoder/decoder with a terminal-inspired UI.
+A modern, sleek, Base64 & AES-256 encoder/decoder with a terminal-inspired UI.
 
 ![image](https://github.com/user-attachments/assets/4070b7bd-7cd0-4314-9885-0a3a885ae8d1)
 
