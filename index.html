@@ -493,7 +493,7 @@
             pointer-events: none;
             opacity: 0.03;
             z-index: -1;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gcHFDELpZ6A4QAAAn9JREFUaN7tmsuK1EAYhb+aTozirBxBQXRWMogLQRB05cJH8Q3El/AlXIgLQURduBNEGR0UZzQzTnfn7yK1mE6laZJOprpnmAOFdCfVnar/nPOfulWV5dTpSxDdh0B74CfwuohzVRXOHHK+ADaBTeDMjP9OgPfAW+AV8Bz4A2wVYdZVCLkGPJrDiHPgLfB4ZlQnwEnghwqNbqDnkLsWeBrBiIvAE+AucGUQqzVgBJypQEiW+H0CvAZuLSDiaGiVDiGPIxkB8DUDRyj2n3kLugfcFv3/CvgArOlLdrFDzSskKgFywD3JmAvAPdGHU+C6Gc1lCnkjjDgdjAxCH0QbOXC1DYKRwbS7CnWWAasjkvJ8AZNlimvygbQDjXcWWvMTpqawhTmWc8jYyTEsYTbCvnuVm5BTFzYxUkbyVjmrSElsYnrznfQQDaS2Ja9yXVnUwVMlOZH0fgTrLTfYnedBXE9E3UyItq7BrKUcSe1E2beuMqtQxGLzKIaYvVD7toTPLSWZEBFtdFVuJ1rXwUVK+1aSE6kLa3Md3bqODG1VRuw2JNM6KzNhLUdCa1mKaFOW64TuV1uDnfB9q8V9Kjuq7JCMT77/JXJwElMf60oJY4oZO23Nj/IiDmuv+gIh0xTXXA0+ey52N0yxVh+wbJC2CQypCrlR1UJKy5E14Jvo4z7wvOa9vhgIcxu4IQJVAjeB76pCKRUj9oGzQCN7OsrbI97XFnAG7JcaCVJdTLxnB9XLUdCCuYNgXLc4XwHnRYdZGKDPX4dGxMfcqphkWU/UXrcyC2Wd0K1MmJhrK/MBGk621i9I/I+1lZn+ASIdLtQ8FS04AAAAAElFTkSuQmCC');
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gcHFDELpZ6A4QAAAn9JREFUaN7tmsuK1EAYhb+aTozirBxBQXRWMogLQRB05cJH8Q3El/AlXIgLQURduBNEGR0UZzQzTnfn7yK1mE6laZJOprpnmAOFdCfVlar/nPOfulWV5dTpSxDdh0B74CfwuohzVRXOHHK+ADaBTeDMjP9OgPfAW+AV8Bz4A2wVYdZVCLkGPJrDiHPgLfB4ZlQnwEnghwqNbqDnkLsWeBrBiIvAE+AucGUQqzVgBJypQEiW+H0CvAZuLSDiaGiVDiGPIxkB8DUDRyj2n3kLugfcFv3/CvgArOlLdrFDzSskKgFywD3JmAvAPdGHU+C6Gc1lCnkjjDgdjAxCH0QbOXC1DYKRwbS7CnWWAasjkvJ8AZNlimvygbQDjXcWWvMTpqawhTmWc8jYyTEsYTbCvnuVm5BTFzYxUkbyVjmrSElsYnrznfQQDaS2Ja9yXVnUwVMlOZH0fgTrLTfYnedBXE9E3UyItq7BrKUcSe1E2beuMqtQxGLzKIaYvVD7toTPLSWZEBFtdFVuJ1rXwUVK+1aSE6kLa3Md3bqODG1VRuw2JNM6KzNhLUdCa1mKaFOW64TuV1uDnfB9q8V9Kjuq7JCMT77/JXJwElMf60oJY4oZO23Nj/IiDmuv+gIh0xTXXA0+ey52N0yxVh+wbJC2CQypCrlR1UJKy5E14Jvo4z7wvOa9vhgIcxu4IQJVAjeB76pCKRUj9oGzQCN7OsrbI97XFnAG7JcaCVJdTLxnB9XLUdCCuYNgXLc4XwHnRYdZGKDPX4dGxMfcqphkWU/UXrcyC2Wd0K1MmJhrK/MBGk621i9I/I+1lZn+ASIdLtQ8FS04AAAAAElFTkSuQmCC');
             animation: noise 0.5s steps(10) infinite;
         }
 
@@ -774,7 +774,16 @@
                                 return;
                             }
                             
-                            const encryptedData = encryptAES(input, password, salt);
+                            // Store salt flag to know if salt was used during encryption
+                            const encrypted = encryptAES(input, password, salt);
+                            
+                            // Store whether a salt was used during encryption
+                            let encryptedData = {
+                                ciphertext: encrypted,
+                                algorithm: 'AES-256',
+                                usedSalt: !!salt
+                            };
+                            
                             const base64Result = encodeBase64(JSON.stringify(encryptedData));
                             result = base64Result;
                         } else {
@@ -784,6 +793,7 @@
                         try {
                             if (useAES) {
                                 const password = passwordInput.value;
+                                const salt = saltInput.value;
                                 
                                 if (!password) {
                                     outputText.value = 'Please enter a password for decryption.';
@@ -792,7 +802,14 @@
                                 
                                 const decodedBase64 = decodeBase64(input);
                                 const parsedData = JSON.parse(decodedBase64);
-                                result = decryptAES(parsedData, password);
+                                
+                                // Check if the encrypted data used salt
+                                if (parsedData.usedSalt && !salt) {
+                                    outputText.value = 'This data was encrypted with a salt. Please provide the same salt for decryption.';
+                                    return;
+                                }
+                                
+                                result = decryptAES(parsedData.ciphertext, password, salt);
                             } else {
                                 result = decodeBase64(input);
                             }
@@ -821,8 +838,8 @@
             }
 
             function encryptAES(text, password, salt) {
-                // If no salt provided, generate a random one
-                const useSalt = salt || generateRandomSalt();
+                // Use provided salt or generate a random one if not provided
+                const useSalt = salt || CryptoJS.lib.WordArray.random(16).toString();
                 
                 // Generate key from password and salt
                 const key = CryptoJS.PBKDF2(password, useSalt, {
@@ -831,20 +848,12 @@
                 });
                 
                 // Encrypt
-                const encrypted = CryptoJS.AES.encrypt(text, key.toString()).toString();
-                
-                return {
-                    ciphertext: encrypted,
-                    salt: useSalt,
-                    algorithm: 'AES-256'
-                };
+                return CryptoJS.AES.encrypt(text, key.toString()).toString();
             }
 
-            function decryptAES(data, password) {
-                const { ciphertext, salt } = data;
-                
-                // Generate key from password and salt
-                const key = CryptoJS.PBKDF2(password, salt, {
+            function decryptAES(ciphertext, password, salt) {
+                // Generate key from password and user-provided salt
+                const key = CryptoJS.PBKDF2(password, salt || '', {
                     keySize: 256 / 32,
                     iterations: 1000
                 });
