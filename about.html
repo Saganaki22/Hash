@@ -26,6 +26,8 @@
     <meta name="twitter:description" content="About Base64 and AES-256 encryption. A powerful tool for secure text encoding and decoding with password protection.">
     <meta name="twitter:image" content="https://i.ibb.co/B2009tQh/hash123.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add Phosphor Icons CDN before closing head tag -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         :root {
             --background-color: #121212;
@@ -50,6 +52,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         body {
@@ -58,6 +64,7 @@
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .app-container {
@@ -145,11 +152,12 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.05);
             overflow: hidden;
-            transition: transform var(--transition-speed);
-        }
-
-        .section:hover {
-            transform: translateY(-5px);
+            transition: all var(--transition-speed);
+            will-change: transform, filter;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            margin-bottom: 10px;
+            scroll-margin-top: 0;
         }
 
         .section-header {
@@ -158,6 +166,31 @@
             padding: 16px var(--terminal-padding);
             background-color: rgba(0, 0, 0, 0.2);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            user-select: none;
+            transition: background-color var(--transition-speed);
+        }
+
+        .section-header:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .section-header.active {
+            background-color: rgba(0, 255, 65, 0.1);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .section-content {
+            padding: 20px var(--terminal-padding);
+            transform: translateZ(0);
+            will-change: transform;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section-content.expanded {
+            max-height: 2000px;
         }
 
         .section-icon {
@@ -165,15 +198,31 @@
             margin-right: 12px;
             color: var(--accent-color);
             text-shadow: 0 0 8px var(--accent-glow);
+            transition: transform var(--transition-speed);
+        }
+
+        .section.active .section-icon {
+            transform: rotate(90deg);
         }
 
         .section-title {
             font-size: 1.2rem;
             color: var(--accent-color);
+            flex-grow: 1;
         }
 
-        .section-content {
-            padding: 20px var(--terminal-padding);
+        .section-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            transition: transform var(--transition-speed);
+        }
+
+        .section.active .section-toggle {
+            transform: rotate(180deg);
         }
 
         p {
@@ -249,7 +298,8 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+            color: black;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .code-block {
@@ -346,6 +396,10 @@
                 padding: 8px;
                 font-size: 0.9em;
             }
+
+            .section-content {
+                scroll-margin-top: 0;
+            }
         }
 
         @media (max-width: 480px) {
@@ -374,6 +428,18 @@
             .comparison-table {
                 font-size: 0.8em;
             }
+
+            .security-label {
+                font-size: 0.9em;
+            }
+
+            .security-label[data-mobile-text]::before {
+                content: attr(data-mobile-text);
+            }
+
+            .security-label[data-mobile-text] span {
+                display: none;
+            }
         }
 
         /* Custom scrollbar */
@@ -394,6 +460,56 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-color);
         }
+
+        /* Add social links styles */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .social-link:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .social-link i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 480px) {
+            .social-links {
+                gap: 20px;
+                padding: 20px 10px;
+            }
+
+            .social-link {
+                width: 44px;
+                height: 44px;
+            }
+
+            .social-link i {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -401,7 +517,7 @@
     <div class="app-container">
         <header class="header">
             <div class="header-title">
-                <h1>drbaph.is-a.dev/Hash</h1>
+                <h1>Hash</h1>
                 <p>About Base64 & AES-256 Encryption</p>
             </div>
             <div class="nav-links">
@@ -427,6 +543,9 @@
                         <i class="fas fa-code"></i>
                     </div>
                     <div class="section-title">What Is Base64?</div>
+                    <div class="section-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
                 <div class="section-content">
                     <p class="animate-typing">Base64 is an <span class="highlight">encoding scheme</span>, not encryption.</p>
@@ -463,6 +582,9 @@
                         <i class="fas fa-lock"></i>
                     </div>
                     <div class="section-title">What Is AES-256 Encryption?</div>
+                    <div class="section-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
                 <div class="section-content">
                     <p>AES (Advanced Encryption Standard) is a <span class="highlight">symmetric encryption algorithm</span> adopted by the U.S. government and widely used worldwide. AES-256 refers to the 256-bit key size variant, offering the highest security level in the AES family.</p>
@@ -506,6 +628,9 @@
                         <i class="fas fa-key"></i>
                     </div>
                     <div class="section-title">The Role of Salt in Encryption</div>
+                    <div class="section-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
                 <div class="section-content">
                     <p>A <span class="highlight">salt</span> is a random piece of data used as an additional input to a one-way function that hashes data, passwords, or passphrases. In our AES implementation, the salt plays a crucial role in strengthening security.</p>
@@ -540,6 +665,9 @@
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="section-title">Password-Based Encryption Security</div>
+                    <div class="section-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
                 <div class="section-content">
                     <p>When you enable AES encryption in CryptoTerm, your password becomes the foundation of security. Here's what happens:</p>
@@ -597,6 +725,9 @@
                         <i class="fas fa-balance-scale"></i>
                     </div>
                     <div class="section-title">Base64 vs. AES: Key Differences</div>
+                    <div class="section-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
                 <div class="section-content">
                     <table class="comparison-table">
@@ -659,6 +790,9 @@
                         <i class="fas fa-user-secret"></i>
                     </div>
                     <div class="section-title">Practical Security Considerations</div>
+                    <div class="section-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
                 <div class="section-content">
                     <p>When using CryptoTerm, consider these practical security aspects:</p>
@@ -676,7 +810,9 @@
                     
                     <div class="security-meter">
                         <div class="security-bar" id="breaking-time-bar"></div>
-                        <div class="security-label">Billions of years with all computers on Earth</div>
+                        <div class="security-label" data-mobile-text="Billions of years">
+                            <span>Billions of years with all computers on Earth</span>
+                        </div>
                     </div>
                     
                     <p><span class="highlight">Real-world vulnerabilities</span> typically come from:</p>
@@ -700,6 +836,19 @@
         </div>
     </div>
 
+    <!-- Add social links section before closing body tag -->
+    <div class="social-links">
+        <a href="https://x.com/drbaph" class="social-link" target="_blank" aria-label="Twitter">
+            <i class="ph-bold ph-x-logo"></i>
+        </a>
+        <a href="https://instagram.com/drbaph" class="social-link" target="_blank" aria-label="Instagram">
+            <i class="ph-bold ph-instagram-logo"></i>
+        </a>
+        <a href="https://drbaph.xyz" class="social-link" target="_blank" aria-label="Website">
+            <i class="ph-bold ph-globe"></i>
+        </a>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Animate security bars after page load
@@ -708,22 +857,47 @@
                 document.getElementById('breaking-time-bar').style.width = '99%';
             }, 500);
             
-            // Add scroll reveal effect to sections
+            // Accordion functionality
             const sections = document.querySelectorAll('.section');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
+            
+            // Open first section by default
+            sections[0].classList.add('active');
+            sections[0].querySelector('.section-content').classList.add('expanded');
+
+            sections.forEach(section => {
+                const header = section.querySelector('.section-header');
+                const content = section.querySelector('.section-content');
+
+                header.addEventListener('click', () => {
+                    const isActive = section.classList.contains('active');
+                    
+                    // Close all sections
+                    sections.forEach(s => {
+                        s.classList.remove('active');
+                        s.querySelector('.section-content').classList.remove('expanded');
+                    });
+
+                    // Open clicked section if it wasn't active
+                    if (!isActive) {
+                        section.classList.add('active');
+                        content.classList.add('expanded');
+                        
+                        // Scroll the section into view on mobile/tablet
+                        if (window.innerWidth <= 768) {
+                            // Wait for the content to expand
+                            setTimeout(() => {
+                                const headerOffset = 0; // No offset
+                                const elementPosition = section.getBoundingClientRect().top;
+                                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                                
+                                window.scrollTo({
+                                    top: offsetPosition,
+                                    behavior: 'smooth'
+                                });
+                            }, 300); // Increased delay to ensure content is fully expanded
+                        }
                     }
                 });
-            }, { threshold: 0.1 });
-            
-            sections.forEach(section => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(20px)';
-                section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                observer.observe(section);
             });
         });
     </script>
